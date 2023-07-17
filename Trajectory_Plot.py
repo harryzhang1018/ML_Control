@@ -3,39 +3,37 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-ref_states_sin = genfromtxt('./data/Sin_Traj.csv', delimiter=',')
+ref_states_sin = genfromtxt('./data/sin_test_v1.csv', delimiter=',')
 ref_sin_x = ref_states_sin[:,0]
 ref_sin_y = ref_states_sin[:,1]
 
-ref_states_circle = genfromtxt('./data/Circle_Traj_CW.csv', delimiter=',')
-ref_circle_x = ref_states_circle[:,0]
-ref_circle_y = ref_states_circle[:,1]
+training_data_1 = genfromtxt('./data/sin_sim_testing_1.csv',delimiter=',')
+gtx_1 = training_data_1[:,0]
+gty_1 = training_data_1[:,1]
 
-train_set_1 = genfromtxt('./data/mpc_sin_train1.csv', delimiter=',')
-x_t1 = train_set_1[:,0]
-y_t1 = train_set_1[:,1]
+training_data_2 = genfromtxt('./data/sin_sim_testing_2.csv',delimiter=',')
+gtx_2 = training_data_2[:,0]
+gty_2 = training_data_2[:,1]
 
-train_set_2 = genfromtxt('./data/mpc_sin_train2.csv', delimiter=',')
-x_t2 = train_set_2[:,0]
-y_t2 = train_set_2[:,1]
+training_data_3 = genfromtxt('./data/sin_sim_testing_3.csv',delimiter=',')
+gtx_3 = training_data_3[:,0]
+gty_3 = training_data_3[:,1]
 
-train_set_3 = genfromtxt('./data/mpc_sin_train3.csv', delimiter=',')
-x_t3 = train_set_3[:,0]
-y_t3 = train_set_3[:,1]
+training_data_4 = genfromtxt('./data/sin_sim_testing_4.csv',delimiter=',')
+gtx_4 = training_data_4[:,0]
+gty_4 = training_data_4[:,1]
 
-ml_set_1 = genfromtxt('./data/mpc_sin_ml1.csv', delimiter=',')
-x_ml_1 = ml_set_1[:,0]
-y_ml_1 = ml_set_1[:,1]
+training_data_5 = genfromtxt('./data/sin_sim_testing_5.csv',delimiter=',')
+gtx_5 = training_data_5[:,0]
+gty_5 = training_data_5[:,1]
 
-ml_set_2 = genfromtxt('./data/circle_ml1.csv', delimiter=',')
-x_ml_2 = ml_set_2[:,0]
-y_ml_2 = ml_set_2[:,1]
+ml_coef_control_data = genfromtxt('./data/sin_sim_ml_coef.csv',delimiter=',')
+ml_x_coef = ml_coef_control_data[:,0]
+ml_y_coef = ml_coef_control_data[:,1]
 
-ekf_t1 = genfromtxt('./data/ekf_sin_t3.csv',delimiter=',')
-gps_x_ekf_t1 = ekf_t1[:,0]
-gps_y_ekf_t1 = ekf_t1[:,1]
-gt_x_ekf_t1 = ekf_t1[:,2]
-gt_y_ekf_t1 = ekf_t1[:,3]
+ml_bb_control_data = genfromtxt('./data/sin_sim_ml_bb.csv',delimiter=',')
+ml_x_bb = ml_bb_control_data[:,0]
+ml_y_bb = ml_bb_control_data[:,1]
 # # plot the mpc controlled trajectory 
 # plt.figure(figsize=(10,5))
 # plt.plot(ref_sin_x,ref_sin_y,'*-',label='reference trajectory')
@@ -51,8 +49,23 @@ gt_y_ekf_t1 = ekf_t1[:,3]
 # plt.plot(x_ml_2,y_ml_2,label='ML Controller: la = 0.7',linewidth=2)
 # plt.legend()
 # plt.show()
-plt.figure(figsize=(10,5))
-plt.plot(gps_x_ekf_t1,gps_y_ekf_t1,label='measurement')
-plt.plot(gt_x_ekf_t1,gt_y_ekf_t1,label='ground truth')
+plt.figure(figsize=(15,7))
+plt.subplot(2,1,1)
+plt.plot(ref_sin_x,ref_sin_y,'--',label='reference path')
+plt.plot(gtx_1,gty_1,label='harry control run 1')
+plt.plot(gtx_2,gty_2,label='harry control run 2')
+plt.plot(gtx_3,gty_3,label='harry control run 3')
+plt.plot(gtx_4,gty_4,label='harry control run 4')
+plt.plot(gtx_5,gty_5,label='harry control run 5')
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
 plt.legend()
+plt.subplot(2,1,2)
+plt.plot(ref_sin_x,ref_sin_y,'--',label='reference path')
+plt.plot(ml_x_coef,ml_y_coef,label = 'Imitation Learning (coefficient)')
+plt.plot(ml_x_bb,ml_y_bb,label = 'Imitation Learning (black box)')
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+plt.legend()
+plt.tight_layout()
 plt.show()
