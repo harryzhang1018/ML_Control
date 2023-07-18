@@ -9,9 +9,13 @@ train_set_2 = genfromtxt('./data/sin_sim_testing_2.csv', delimiter=',')
 train_set_3 = genfromtxt('./data/sin_sim_testing_3.csv', delimiter=',')
 train_set_4 = genfromtxt('./data/sin_sim_testing_4.csv', delimiter=',')
 train_set_5 = genfromtxt('./data/sin_sim_testing_5.csv', delimiter=',')
-
+train_set_6 = genfromtxt('./data/circle_sim_testing_1.csv', delimiter=',')
+train_set_7 = genfromtxt('./data/circle_sim_testing_2.csv', delimiter=',')
+train_set_8 = genfromtxt('./data/circle_sim_testing_3.csv', delimiter=',')
+train_set_9 = genfromtxt('./data/circle_sim_testing_4.csv', delimiter=',')
+train_set_10 = genfromtxt('./data/circle_sim_testing_5.csv', delimiter=',')
 ##combining training data into one big matrix
-train_set = np.concatenate((train_set_1,train_set_2,train_set_3,train_set_4,train_set_5),axis=0)
+train_set = np.concatenate((train_set_1,train_set_2,train_set_3,train_set_4,train_set_5,train_set_6,train_set_7,train_set_8,train_set_9,train_set_10),axis=0)
 error_state = train_set[:,2:6] #error states--inputs
 ctrl_output = train_set[:,6:8] # control outputs
 # Load the model from a file

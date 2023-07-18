@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import genfromtxt
 
-filename = './data/sin_test_v1.csv'
+# filename = './data/sin_test_v1.csv'
+filename = './data/Circle_Traj_CW.csv'
 
 def convert_conefile(file,move_to_dART):
     data = genfromtxt(file,delimiter=',')
@@ -14,8 +15,8 @@ def convert_conefile(file,move_to_dART):
     color_code = np.ones((x.shape[0],1))
     cone_file = np.hstack((seq, color_code, x[:, np.newaxis], y[:, np.newaxis]))
     
-    np.savetxt('cone_sin_v1.csv', cone_file, delimiter=',',fmt='%f')
+    np.savetxt('circle.csv', cone_file, delimiter=',',fmt='%f')
     if move_to_dART:
-        np.savetxt('/home/harry/autonomy-research-testbed/sim/data/autonomy-toolkit/paths/cone_sin_v1.csv', cone_file, delimiter=',',fmt='%f')
+        np.savetxt('/home/harry/autonomy-research-testbed/sim/data/autonomy-toolkit/paths/circle.csv', cone_file, delimiter=',',fmt='%f')
 
 convert_conefile(filename,True)
