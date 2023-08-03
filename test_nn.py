@@ -72,4 +72,4 @@ plt.plot(time_step,ctrl_output[:,1],label='actual steering')
 plt.plot(time_step,pre_steering,label='predict steering by NN')
 plt.legend()
 
-plt.show()
+plt.savefig('image.png')
