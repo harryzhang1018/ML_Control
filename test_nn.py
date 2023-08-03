@@ -1,25 +1,45 @@
-from keras.models import load_model
+from keras_core.models import load_model
+import tensorflow as tf
 from numpy import genfromtxt
 import numpy as np
 import time
+import os
 import matplotlib.pyplot as plt
 
-train_set_1 = genfromtxt('./data/sin_sim_testing_1.csv', delimiter=',')
-train_set_2 = genfromtxt('./data/sin_sim_testing_2.csv', delimiter=',')
-train_set_3 = genfromtxt('./data/sin_sim_testing_3.csv', delimiter=',')
-train_set_4 = genfromtxt('./data/sin_sim_testing_4.csv', delimiter=',')
-train_set_5 = genfromtxt('./data/sin_sim_testing_5.csv', delimiter=',')
-train_set_6 = genfromtxt('./data/circle_sim_testing_1.csv', delimiter=',')
-train_set_7 = genfromtxt('./data/circle_sim_testing_2.csv', delimiter=',')
-train_set_8 = genfromtxt('./data/circle_sim_testing_3.csv', delimiter=',')
-train_set_9 = genfromtxt('./data/circle_sim_testing_4.csv', delimiter=',')
-train_set_10 = genfromtxt('./data/circle_sim_testing_5.csv', delimiter=',')
-##combining training data into one big matrix
-train_set = np.concatenate((train_set_1,train_set_2,train_set_3,train_set_4,train_set_5,train_set_6,train_set_7,train_set_8,train_set_9,train_set_10),axis=0)
+def read_csv_into_np_array(file_path):
+    # Load CSV data into a numpy array
+    return np.loadtxt(file_path, delimiter=',')
+
+def combine_csv_files(folder_path):
+    # Initialize an empty list to store numpy arrays
+    arrays_list = []
+
+    # Get a list of all files in the folder
+    file_list = os.listdir(folder_path)
+
+    # Iterate through each file in the folder
+    for file in file_list:
+        # Check if the file is a CSV file
+        if file.endswith('.csv'):
+            # Read the CSV file into a numpy array
+            file_path = os.path.join(folder_path, file)
+            array = read_csv_into_np_array(file_path)
+            arrays_list.append(array)
+
+    # Concatenate all numpy arrays into a single big numpy array
+    combined_matrix = np.concatenate(arrays_list)
+
+    return combined_matrix
+
+# Replace 'folder_path' with the path to the folder containing your CSV files
+folder_path = './data/circle_Manual_0la_trainingData/'
+train_set = combine_csv_files(folder_path)
+
 error_state = train_set[:,2:6] #error states--inputs
 ctrl_output = train_set[:,6:8] # control outputs
+print(error_state.shape)
 # Load the model from a file
-model = load_model('keras_ml_learnMC.h5')
+model = load_model('keras_ml_learnMC_0la_merge.keras')
 
 # Use the model to make predictions
 print(error_state.shape)
@@ -38,6 +58,8 @@ ctrl = model.predict(error_state_test)
 timespan = time.time()-t_start
 print('time takes: ',timespan)
 print('shape of output: ', ctrl.shape)
+avg_err = [np.mean(abs(pre_steering-ctrl_output[:,1])),np.mean(abs(pre_throttle-ctrl_output[:,0]))]
+print('Neural Network: Mean error for steering and throttle are: \n',avg_err)
 time_step = np.arange(0,pre_steering.shape[0])
 plt.figure(1)
 plt.subplot(2,1,1)
