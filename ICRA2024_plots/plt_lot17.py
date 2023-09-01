@@ -17,10 +17,9 @@ def compute_speed_vector(gtx, gty):
             speed[i+1] = speed[i]
     return speed
 
-show_sim_res = True
 #ref_states = genfromtxt('/home/harry/Documents/test_plot/wpts_mpc/data/Circle_Traj.csv', delimiter=',')
 #ref_states = genfromtxt('./pid_sin/sin_test_v1.csv', delimiter=',')
-ref_states = genfromtxt('./Lot17/lot17_sinsquare_sv.csv', delimiter=',')
+ref_states = genfromtxt('./paths/lot17_sinsquare_multi_vels.csv', delimiter=',')
 #ref_states = genfromtxt('./pid_sin/sin_test_v5.csv', delimiter=',')
 ref_x = ref_states[:,0]
 ref_y = ref_states[:,1]
@@ -51,7 +50,7 @@ elif data_type == "C":
 elif data_type == "D":
     title_plot = data_type_4
 
-foldername = './test_icra/'
+foldername = './data/'
 filename = 'ms_mc_bb_1.csv'
 file = foldername + filename
 data = data_read(file)
@@ -78,6 +77,7 @@ plt.title('lot 17 '+ title_plot)
 plt.tight_layout()
 #plt.show()
 
+show_sim_res = False
 if show_sim_res:
     # sim_res = genfromtxt('./test_0710/simulation_sinsquare.csv', delimiter=',')
     sim_res = genfromtxt('./Simulation_ML/ml_mc_pd.csv', delimiter=',')
@@ -105,10 +105,10 @@ if plot_speed_map:
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
 
-time_sim = np.arange(sim_steering.shape[0])*0.1    
+#time_sim = np.arange(sim_steering.shape[0])*0.1    
 time_real = np.arange(data[:,9].shape[0])*0.1
 
-plot_profile = True
+plot_profile = False
 if plot_profile:
     plt.figure(figsize=(10,3))
     plt.subplot(2,1,1)
@@ -131,4 +131,4 @@ if plot_profile:
     plt.legend(fontsize="12.5")
     plt.tight_layout()
 plt.tight_layout()
-plt.show()
+plt.savefig('image.png')
