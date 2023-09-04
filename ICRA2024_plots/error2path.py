@@ -6,9 +6,14 @@ import scipy.signal
 
 def dist(point, p2):
     return np.sqrt((point[0]-p2[0])**2+(point[1]-p2[1])**2)
-traj = np.loadtxt('./data/mc_bb_2.csv', delimiter=',')
+t1 = np.loadtxt('./data/mc_bb_1.csv', delimiter=',')
+t2 = np.loadtxt('./data/mc_bb_2.csv', delimiter=',')
+t3 = np.loadtxt('./data/mc_bb_3.csv', delimiter=',')
+t4 = np.loadtxt('./data/mc_bb_4.csv', delimiter=',')
+t5 = np.loadtxt('./data/mc_bb_5.csv', delimiter=',')
+traj = np.concatenate((t1, t2, t3, t4, t5), axis=0)
 #path = genfromtxt('/home/scaldararu/Documents/Python_Data_Manipulation/test_vel/path.csv', delimiter=',')
-path = np.loadtxt('./paths/rect.csv', delimiter=',')
+path = np.loadtxt('./paths/lot17_sinsquare.csv', delimiter=',')
 x = traj[:,0]
 y = traj[:,1]
 px = path[:,0]
