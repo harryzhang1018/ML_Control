@@ -143,7 +143,6 @@ if plot_profile:
     # Plot row 1
     axes[0].plot(time_real,data[:,8],label='Reality')
     axes[0].plot(time_sim,sim_throttle,label='Simualtion')
-    axes[0].set_xlabel('Time (s)')
     axes[0].set_ylabel('Throttle')
     # Need only 1 legend
     axes[0].legend()

@@ -5,6 +5,19 @@ import matplotlib.pyplot as plt
 from operator import itemgetter
 
 
+# Add matplotlib rc parameters to beautify plots
+SMALL_SIZE = 12
+MEDIUM_SIZE = 14
+BIGGER_SIZE = 16
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
 #using the refx and refy, want to find the first point that and the throttle and steering for that spot.
 def preprocess_data(refx, refy, data, datat, datas):
     x = data[:,0]
@@ -101,14 +114,14 @@ EKFx = data[:,4]
 EKFy = data[:,5]
 
 plt.figure(figsize=(5,10))
-plt.plot(ref_x,ref_y,'--',label='reference trajectory')
+plt.plot(ref_x,ref_y,'--',label='Reference trajectory')
 # plt.plot(rx,ry,label='gps')
-plt.plot(gtx,gty,label='trajectory in reality')
+plt.plot(gtx,gty,label='Trajectory in reality using RTKGPS')
 # plt.plot(EKFx,EKFy,label='state estimation')
 plt.legend()
-plt.xlabel('x (m)')
-plt.ylabel('y (m)')
-plt.title('lot 17 '+ title_plot, fontsize="12")
+plt.xlabel('X (m)')
+plt.ylabel('Y (m)')
+plt.title('Lot 17 '+ title_plot)
 plt.tight_layout()
 #plt.show()
 
@@ -142,27 +155,29 @@ my_ref_r, r_t, r_s = preprocess_data(ref_x, ref_y, data, data[:,8], data[:,9])
 
 plot_profile = True
 if plot_profile:
-    plt.figure(figsize=(10,3))
+    # plt.figure(figsize=(10,3))
     # plt.subplot(2,1,1)
     # plt.plot(range(data[:,10].shape[0]),data[:,6],label='heading from imu')
     # plt.legend()
     # plt.subplot(2,1,2)
     # plt.plot(range(data[:,11].shape[0]),data[:,11],label='roll from imu')
     # plt.legend()
-    # plt.figure(figsize=(10,3))
-    plt.subplot(2,1,1)
-    plt.title('control profile '+ title_plot)
-    plt.plot(my_ref_r,r_t,label='throttle')
-    plt.plot(my_ref_sim,sim_t,label='throttle in sim')
-    plt.xlabel('time (s)')
-    plt.legend(fontsize="12.5")
-    plt.xlim([-300,1100])
-    plt.subplot(2,1,2)
-    plt.plot(my_ref_r,r_s,label='steering')
-    plt.plot(my_ref_sim,sim_s,label='steering in sim')
-    plt.xlabel('time (s)')
-    plt.legend(fontsize="12.5")
-    plt.xlim([-300,1100])
-    plt.tight_layout()
+    # Set up the figure
+    fig, axes = plt.subplots(nrows = 2, ncols = 1, figsize = (10,6), sharex = True)
+    fig.suptitle('Control profile '+ title_plot)
+    axes[0].plot(my_ref_r,r_t,label='Reality')
+    axes[0].plot(my_ref_sim,sim_t,label='Simulation')
+    axes[0].set_ylabel('Throttle')
+    axes[0].legend()
+    axes[0].set_xlim(xmax = 1100)
+    axes[1].plot(my_ref_r,r_s,label='Reality')
+    axes[1].plot(my_ref_sim,sim_s,label='Simulation')
+    axes[1].set_xlabel('Time (s)')
+    axes[1].set_ylabel('Steering')
+    axes[1].legend()
+    axes[1].set_xlim(xmax = 1100)
+    fig.tight_layout()
 plt.tight_layout()
-plt.savefig('image.png')
+# Save both as eps and png
+plt.savefig('image.eps', format='eps', dpi = 3000) # Use eps for latex as it is vectorized
+plt.savefig('image.png', facecolor='w', format='png', dpi = 1000) # Use png for other purposes
