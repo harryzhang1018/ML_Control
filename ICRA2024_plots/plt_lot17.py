@@ -3,6 +3,21 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
+
+# Add matplotlib rc parameters to beautify plots
+SMALL_SIZE = 12
+MEDIUM_SIZE = 14
+BIGGER_SIZE = 16
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+
 def compute_speed_vector(gtx, gty):
     #print('size of x inside function: ', gtx.shape)
     # Compute the differences between consecutive elements
@@ -66,14 +81,14 @@ EKFx = data[:,4]
 EKFy = data[:,5]
 
 plt.figure(figsize=(5,10))
-plt.plot(ref_x,ref_y,'--',label='reference trajectory')
+plt.plot(ref_x,ref_y,'--',label='Reference trajectory')
 # plt.plot(rx,ry,label='gps')
-plt.plot(gtx,gty,label='trajectory in reality using RTKGPS')
+plt.plot(gtx,gty,label='Trajectory in reality using RTKGPS')
 # plt.plot(EKFx,EKFy,label='state estimation')
 plt.legend()
-plt.xlabel('x (m)')
-plt.ylabel('y (m)')
-plt.title('lot 17 '+ title_plot)
+plt.xlabel('X (m)')
+plt.ylabel('Y (m)')
+plt.title('Lot 17 '+ title_plot)
 plt.tight_layout()
 #plt.show()
 
@@ -86,8 +101,8 @@ if show_sim_res:
     sim_throttle = sim_res[:,6]
     sim_steering = sim_res[:,7]
     #plt.plot(ref_x,ref_y,'--',label='reference trajectory')
-    plt.plot(x,y,label='trajectory in simulation')
-    plt.legend(fontsize="12.5")
+    plt.plot(x,y,label='Trajectory in simulation')
+    plt.legend()
 
 plot_speed_map = False
 if plot_speed_map:
@@ -102,8 +117,8 @@ if plot_speed_map:
     plt.scatter(gtx, gty, c=gt_v, cmap='jet')
     plt.colorbar(label='Velocity Magnitude') 
     plt.title('Reality Speed Map')
-    plt.xlabel('x (m)')
-    plt.ylabel('y (m)')
+    plt.xlabel('X (m)')
+    plt.ylabel('Y (m)')
 
 #time_sim = np.arange(sim_steering.shape[0])*0.1    
 time_real = np.arange(data[:,9].shape[0])*0.1
@@ -112,14 +127,14 @@ plot_profile = False
 if plot_profile:
     plt.figure(figsize=(10,3))
     plt.subplot(2,1,1)
-    plt.plot(range(data[:,10].shape[0]),data[:,6],label='heading from imu')
+    plt.plot(range(data[:,10].shape[0]),data[:,6],label='Heading from imu')
     plt.legend()
     plt.subplot(2,1,2)
-    plt.plot(range(data[:,11].shape[0]),data[:,11],label='roll from imu')
+    plt.plot(range(data[:,11].shape[0]),data[:,11],label='Roll from imu')
     plt.legend()
     plt.figure(figsize=(10,3))
     plt.subplot(2,1,1)
-    plt.title('control profile '+ title_plot)
+    plt.title('Control Profile '+ title_plot)
     plt.plot(time_real,data[:,8],label='throttle')
     plt.plot(time_sim,sim_throttle,label='throttle in sim')
     plt.xlabel('time (s)')
@@ -131,4 +146,6 @@ if plot_profile:
     plt.legend(fontsize="12.5")
     plt.tight_layout()
 plt.tight_layout()
-plt.savefig('image.png')
+#Save as both eps and png
+plt.savefig('image.eps', format='eps', dpi=3000) # Use eps for latex as it is vectorized
+plt.savefig('image.png', facecolor = 'w', format='png', dpi=1000) # Use png for other purposes
