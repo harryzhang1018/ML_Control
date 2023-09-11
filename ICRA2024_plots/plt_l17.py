@@ -3,6 +3,20 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
+# Add matplotlib rc parameters to beautify plots
+
+SMALL_SIZE = 12
+MEDIUM_SIZE = 14
+BIGGER_SIZE = 16
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
 
 def data_read(filename):
     data = genfromtxt(filename, delimiter=',')
@@ -122,18 +136,24 @@ if plot_profile:
     plt.subplot(2,1,2)
     plt.plot(range(data[:,11].shape[0]),data[:,11],label='roll from imu')
     plt.legend()
-    plt.figure(figsize=(10,3))
-    plt.subplot(2,1,1)
-    plt.title('control profile '+ title_plot)
-    plt.plot(time_real,data[:,8],label='throttle')
-    plt.plot(time_sim,sim_throttle,label='throttle in sim')
-    plt.xlabel('time (s)')
-    plt.legend(fontsize="12.5")
-    plt.subplot(2,1,2)
-    plt.plot(time_real,data[:,9],label='steering')
-    plt.plot(time_sim,sim_steering,label='steering in sim')
-    plt.xlabel('time (s)')
-    plt.legend(fontsize="12.5")
-    plt.tight_layout()
-plt.tight_layout()
-plt.savefig('image.png')
+    # Set up the figure
+    fig, axes = plt.subplots(nrows = 2, ncols = 1, figsize = (10,6), sharex = True)
+    # Set up the title
+    fig.suptitle('Control Profile '+ title_plot)
+    # Plot row 1
+    axes[0].plot(time_real,data[:,8],label='Reality')
+    axes[0].plot(time_sim,sim_throttle,label='Simualtion')
+    axes[0].set_xlabel('Time (s)')
+    axes[0].set_ylabel('Throttle')
+    # Need only 1 legend
+    axes[0].legend()
+    # Plot row 2
+    axes[1].plot(time_real,data[:,9],label='Reality')
+    axes[1].plot(time_sim,sim_steering,label='Simulation')
+    axes[1].set_xlabel('Time (s)')
+    axes[1].set_ylabel('Steering')
+    fig.tight_layout()
+
+# Save both as eps and png
+plt.savefig('image.eps', format='eps', dpi = 3000) # Use eps for latex as it is vectorized
+plt.savefig('image.png', facecolor='w', format='png', dpi = 1000) # Use png for other purposes
