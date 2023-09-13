@@ -2,20 +2,7 @@ from numpy import genfromtxt
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
-
-# Add matplotlib rc parameters to beautify plots
-
-SMALL_SIZE = 12
-MEDIUM_SIZE = 14
-BIGGER_SIZE = 16
-
-plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
-plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
-plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
-plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+import matplotlib
 
 
 def data_read(filename):
@@ -49,16 +36,16 @@ title_plot = data_type_1
 
 foldername = './data/'
 #manual control single speed
-filename = 'mc_bb_1.csv'
-title_plot = '(NN Trained By Manual Control, single speed)'
+# filename = 'mc_bb_1.csv'
+# title_plot = '(NN Trained By Manual Control, single speed)'
 
 #mpc single speed
 # filename = 'mpc_bb_2.csv'
 # title_plot = '(NN Trained By MPC, single speed)'
 
 #multispeed mc
-#filename = 'ms_mc_bb_1.csv'
-#title_plot = '(NN Trained By MPC, multi speed)'
+filename = 'ms_mpc_bb_5.csv'
+title_plot = '(NN Trained By MPC, multi speed)'
 
 #multispeed mpc
 #filename = 'ms_mpc_bb_1.csv'
@@ -95,7 +82,7 @@ if show_sim_res:
     # sim_res = genfromtxt('./data/keras_ml_learMPC_1la_0808_sim.csv', delimiter=',')
 
     #mc multispeed
-    sim_res = genfromtxt('./data/keras_ml_learMC_1la_0828_sim_30v.csv', delimiter=',')
+    sim_res = genfromtxt('./data/ms_mpc.csv', delimiter=',')
 
     #mpc multispeed
     # sim_res = genfromtxt('./data/keras_ml_learMPC_1la_0828_sim_30v.csv', delimiter=',')
@@ -108,51 +95,48 @@ if show_sim_res:
     plt.plot(x,y,label='trajectory in simulation')
     plt.legend(fontsize="16")
 
-plot_speed_map = False
+plot_speed_map = True
 if plot_speed_map:
     plt.figure(figsize=(5,10))
-    # plt.subplot(1,2,1)
-    # plt.scatter(x, y, c=sim_res[:,3], cmap='jet')
+    plt.subplot(1,1,1)
+    cmap = matplotlib.cm.jet
+    norm = matplotlib.colors.Normalize(vmin=0.4, vmax=2)
+    # plt.scatter(x, y, c=sim_res[:,8], cmap=cmap, norm = norm)
     # plt.colorbar(label='Velocity Magnitude') 
-    # plt.title('Simulation Speed Map')
+    # plt.title('Simulation Speed Map (MPC)')
     # plt.xlabel('x (m)')
     # plt.ylabel('y (m)')
-    #plt.subplot(1,2,2)
-    plt.scatter(gtx, gty, c=gt_v, cmap='jet')
+    # plt.subplot(1,2,2)
+    plt.scatter(gtx, gty, c=gt_v,cmap=cmap, norm = norm)
     plt.colorbar(label='Velocity Magnitude') 
-    plt.title('Reality Speed Map')
+    plt.title('Reality Speed Map (MPC)')
     plt.xlabel('x (m)')
     plt.ylabel('y (m)')
 
 time_sim = np.arange(sim_steering.shape[0])*0.1    
 time_real = np.arange(data[:,9].shape[0])*0.1
 
-plot_profile = True
-if plot_profile:
-    plt.figure(figsize=(10,3))
-    plt.subplot(2,1,1)
-    plt.plot(range(data[:,10].shape[0]),data[:,6],label='heading from imu')
-    plt.legend()
-    plt.subplot(2,1,2)
-    plt.plot(range(data[:,11].shape[0]),data[:,11],label='roll from imu')
-    plt.legend()
-    # Set up the figure
-    fig, axes = plt.subplots(nrows = 2, ncols = 1, figsize = (10,6), sharex = True)
-    # Set up the title
-    fig.suptitle('Control Profile '+ title_plot)
-    # Plot row 1
-    axes[0].plot(time_real,data[:,8],label='Reality')
-    axes[0].plot(time_sim,sim_throttle,label='Simualtion')
-    axes[0].set_ylabel('Throttle')
-    # Need only 1 legend
-    axes[0].legend()
-    # Plot row 2
-    axes[1].plot(time_real,data[:,9],label='Reality')
-    axes[1].plot(time_sim,sim_steering,label='Simulation')
-    axes[1].set_xlabel('Time (s)')
-    axes[1].set_ylabel('Steering')
-    fig.tight_layout()
-
-# Save both as eps and png
-plt.savefig('image.eps', format='eps', dpi = 3000) # Use eps for latex as it is vectorized
-plt.savefig('image.png', facecolor='w', format='png', dpi = 1000) # Use png for other purposes
+# plot_profile = False
+# if plot_profile:
+#     plt.figure(figsize=(10,3))
+#     plt.subplot(2,1,1)
+#     plt.plot(range(data[:,10].shape[0]),data[:,6],label='heading from imu')
+#     plt.legend()
+#     plt.subplot(2,1,2)
+#     plt.plot(range(data[:,11].shape[0]),data[:,11],label='roll from imu')
+#     plt.legend()
+#     plt.figure(figsize=(10,3))
+#     plt.subplot(2,1,1)
+#     plt.title('control profile '+ title_plot)
+#     plt.plot(time_real,data[:,8],label='throttle')
+#     plt.plot(time_sim,sim_throttle,label='throttle in sim')
+#     plt.xlabel('time (s)')
+#     plt.legend(fontsize="12.5")
+#     plt.subplot(2,1,2)
+#     plt.plot(time_real,data[:,9],label='steering')
+#     plt.plot(time_sim,sim_steering,label='steering in sim')
+#     plt.xlabel('time (s)')
+#     plt.legend(fontsize="12.5")
+#     plt.tight_layout()
+plt.tight_layout()
+plt.savefig('image.png')
