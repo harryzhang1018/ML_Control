@@ -2,7 +2,7 @@ import os
 import csv
 
 folder_path = "./data/lidar_oa_steering"
-output_path = "./data/lidar_oa_steering_clip10"
+output_path = "./data/lidar_oa_steering_clip5"
 
 files = os.listdir(folder_path)
 
@@ -16,8 +16,8 @@ for file in files:
                 elements = line.strip().split(',')
                 output_line = []
                 for e in elements:
-                    if float(e) > 10:
-                        output_line.append(10.0)
+                    if float(e) > 5:
+                        output_line.append(5.0)
                     else:
                         output_line.append(e)
                 # send the output to the same output file name, but to the output_path dir
